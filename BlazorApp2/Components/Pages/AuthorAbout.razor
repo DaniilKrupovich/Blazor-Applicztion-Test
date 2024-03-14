@@ -1,0 +1,36 @@
+﻿
+@page "/author/{AuthorId:int}"
+@rendermode InteractiveServer
+@inject IAuthorService AuthorService
+@inject NavigationManager Navigation
+
+<PageTitle>About</PageTitle>
+
+<h1>@author.Name</h1>
+<h2>Description</h2>
+<p>@author.Description</p>
+
+<p>Phone number:@author.PhoneNumber</p>
+<p>Email:@author.Email</p>
+
+<h3>@AuthorService.GetCreationTime()</h3>
+
+<button class="btn btn-primary" @onclick="Navigate">Back</button>
+
+@code {
+    [Parameter]
+    public int AuthorId { get; set; }
+
+    public Author author { get; set; }
+
+
+    protected override void OnInitialized()
+    {
+        author = AuthorService.GetAuthorById(AuthorId);
+    }
+    public void Navigate()
+    {
+        Navigation.NavigateTo("/authors");
+    }
+
+}

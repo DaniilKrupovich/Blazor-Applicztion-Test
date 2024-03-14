@@ -1,0 +1,32 @@
+﻿@page "/authors"
+@rendermode InteractiveServer
+@inject IAuthorService AuthorService
+@inject NavigationManager Navigation
+
+<PageTitle>Authors</PageTitle>
+
+<h1>List Authors:</h1>
+
+@foreach (var author in ListAuthors)
+{
+    int id = author.AuthorId;
+    <div>
+        <p>@author.Name
+            <button class="btn btn-primary" @onclick="() => Navigate(id)">About</button>
+        </p>
+    </div>
+}
+
+@code {
+    public List<Author> ListAuthors { get; set; }
+
+    protected override void OnInitialized()
+    {
+        ListAuthors = AuthorService.GetAuthors();
+    }
+
+    void Navigate(int id)
+    {
+        Navigation.NavigateTo($"/author/{id}");
+    }
+}
