@@ -7,13 +7,9 @@
 <PageTitle>About</PageTitle>
 
 <h1>@author.Name</h1>
-<h2>Description</h2>
 <p>@author.Description</p>
 
-<p>Phone number:@author.PhoneNumber</p>
-<p>Email:@author.Email</p>
-
-<h3>@AuthorService.GetCreationTime()</h3>
+<h3>Creation time: @AuthorService.GetCreationTime()</h3>
 
 <button class="btn btn-primary" @onclick="Navigate">Back</button>
 

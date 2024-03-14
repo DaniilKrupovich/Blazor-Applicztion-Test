@@ -6,16 +6,33 @@
 <PageTitle>Authors</PageTitle>
 
 <h1>List Authors:</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>AuthorId</th>
+            <th>AuthorName</th>
+            <th>PhoneNumber</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var author in ListAuthors)
+        {
+            <tr>
+                <td>@author.AuthorId</td>
+                <td>
+                    <NavLink href=@string.Format("/author/{0}",@author.AuthorId)>
+                        @author.Name
+                    </NavLink>
+                </td>
+                <td>@author.PhoneNumber</td>
+                <td>@author.Email</td>
+            </tr>
+        }
+    </tbody>
+    
+</table>
 
-@foreach (var author in ListAuthors)
-{
-    int id = author.AuthorId;
-    <div>
-        <p>@author.Name
-            <button class="btn btn-primary" @onclick="() => Navigate(id)">About</button>
-        </p>
-    </div>
-}
 
 @code {
     public List<Author> ListAuthors { get; set; }
