@@ -1,9 +1,50 @@
 ﻿@page "/authors"
 @rendermode InteractiveServer
-@inject IAuthorService AuthorService
-@inject NavigationManager Navigation
+@inject IAuthorService AuthorService;
+@inject NavigationManager Navigation;
+@inject IJSRuntime JSRuntime;
 
 <PageTitle>Authors</PageTitle>
+
+<div class="col-12">
+    <h3><b>Enter the author information</b></h3>
+
+    <div id="divServerValidations" class="col-10 alert alert-info">
+
+    </div>
+
+    <EditForm Model="@author" OnValidSubmit="@SaveAuthor">
+        @* <DataAnnotationsValidator/> *@
+        <label>Name:</label>
+        <input @ref="nameText" @bind-value="author.Name" placeholder ="name"/>
+        &nbsp;<ValidationMessage For="@(() => author.Name)"/>
+        <br />
+        <label>PhoneNumber:</label>
+        <InputText @bind-Value="author.PhoneNumber" placeholder="phone number" />
+        &nbsp;<ValidationMessage For="@(() => author.PhoneNumber)" />
+        <br />
+        <label>Email:</label>
+        <InputText @bind-Value="author.Email" placeholder="email" />
+        &nbsp;<ValidationMessage For="@(() => author.Email)" />
+        <br />
+        <label>Description:</label>
+        @* <InputText @bind-Value="author.Description" placeholder="description" />
+        &nbsp;<ValidationMessage For="@(() => author.Description)" /> *@
+            <InputSelect @bind-Value="author.Description">
+            @if(Cities != null)
+            {
+                @foreach(var city in Cities)
+                {
+                    <option value="@city">@city</option>
+                }
+            }
+        </InputSelect>
+        <br />
+
+        <input type="submit" value="Save"/>
+        <input type="submit" value="Clear"/>
+    </EditForm>
+</div>
 
 <h1>List Authors:</h1>
 <table class="table">
@@ -35,15 +76,45 @@
 
 
 @code {
+    public Author author { get; set; }
     public List<Author> ListAuthors { get; set; }
+    private IJSObjectReference? module;
+    public ElementReference nameText;
+    public string[] Cities { get; set; }
 
     protected override void OnInitialized()
     {
+        author = new Author();
         ListAuthors = AuthorService.GetAuthors();
     }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "/js/site.js");
+        }
+        init();
+    }
+
+    public async Task init()
+    {
+        Cities = await module.InvokeAsync<string[]>("getCities");
+        StateHasChanged();
+    }
+
 
     void Navigate(int id)
     {
         Navigation.NavigateTo($"/author/{id}");
+    }
+    public async Task SaveAuthor()
+    {
+        AuthorService.SaveAuthor(author);
+        var name = author.Name;
+        author = new Author();
+
+
+        await module.InvokeVoidAsync("saveMessage",name);
+        await module.InvokeVoidAsync("setFocusOnElement", nameText);
     }
 }

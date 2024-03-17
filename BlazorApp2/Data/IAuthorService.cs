@@ -7,5 +7,6 @@ namespace BlazorApp2.Data
         Author GetAuthorById(int authorId);
         List<Author> GetAuthors();
         string GetCreationTime();
+        void SaveAuthor(Author author);
     }
 }
