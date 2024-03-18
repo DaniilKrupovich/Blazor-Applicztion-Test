@@ -33,6 +33,12 @@
     [Parameter]
     public bool Result{ get; set; }
 
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        CloseValidation();
+    }
+
     public async Task CloseValidation()
     {
         IsVisible = false;

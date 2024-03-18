@@ -1,0 +1,35 @@
+﻿@inject IJSRuntime JS;
+
+<select @bind="CurrentCity" classs="form-control col-3">
+    @if(@Cities != null)
+    {
+        <option value="">select city...</option>
+        foreach(var city in Cities)
+        {
+            <option value="@city">@city</option>
+        }
+    }
+</select>
+
+
+@code {
+    [Parameter]
+    public string CurrentCity{ get; set; }
+    private string[] Cities{ get; set; }
+    private IJSObjectReference? module;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            module = await JS.InvokeAsync<IJSObjectReference>("import", "/js/site.js");
+        }
+        init();
+    }
+    private async Task init()
+    {
+        Cities = await module.InvokeAsync<string[]>("getCities");
+        StateHasChanged();
+    }
+
+}

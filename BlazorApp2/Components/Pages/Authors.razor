@@ -8,28 +8,27 @@
 
 <div class="col-12">
     <h3><b>Enter the author information</b></h3>
-        <ServerValidations IsVisible="@IsVisible" Result="@Result">
-            @Name
-        </ServerValidations>
+
+    <ServerValidations IsVisible="@IsVisible" Result="@Result">
+        @Name
+    </ServerValidations>
 
     <EditForm Model="@author" OnValidSubmit="@SaveAuthor">
         <DataAnnotationsValidator/>
-        <label>Name:</label>
-        <input @ref="nameText" @bind-value="author.Name" placeholder ="name"/>
+        <label class="col-2 font-weight-bold">Name:</label>
+        <input @ref="nameText" class="form-control col-3" @bind-value="author.Name" placeholder="name" />
         &nbsp;<ValidationMessage For="@(() => author.Name)"/>
         <br />
-        <label>PhoneNumber:</label>
-        <InputText @bind-Value="author.PhoneNumber" placeholder="phone number" />
+        <label class="col-2 font-weight-bold">PhoneNumber:</label>
+        <InputText class="form-control col-3" @bind-Value="author.PhoneNumber" placeholder="phone number" />
         &nbsp;<ValidationMessage For="@(() => author.PhoneNumber)" />
         <br />
-        <label>Email:</label>
-        <InputText @bind-Value="author.Email" placeholder="email" />
+        <label class="col-2 font-weight-bold">Email:</label>
+        <InputText class="form-control col-3" @bind-Value="author.Email" placeholder="email" />
         &nbsp;<ValidationMessage For="@(() => author.Email)" />
         <br />
-        <label>Description:</label>
-        @* <InputText @bind-Value="author.Description" placeholder="description" />
-        &nbsp;<ValidationMessage For="@(() => author.Description)" /> *@
-            <InputSelect @bind-Value="author.Description">
+        <label class="col-2 font-weight-bold">City:</label>
+            @* <InputSelect @bind-Value="author.Description">
             @if(Cities != null)
             {
                 @foreach(var city in Cities)
@@ -37,11 +36,15 @@
                     <option value="@city">@city</option>
                 }
             }
-        </InputSelect>
+        </InputSelect> *@
+
+        <SelectCity CurrentCity="@author.Description"></SelectCity>
+        @* <InputText @bind-Value="author.Description" placeholder="city" /> *@
+        &nbsp;<ValidationMessage For="@(() => author.Description)" />
         <br />
 
-        <input type="submit" value="Save"/>
-        <input type="submit" value="Clear"/>
+        <input type="submit" value="Save" class="form-control col-1 btn btn-primary" />
+        <input type="submit" value="Clear" class="form-control col-1 btn btn-primary" />
     </EditForm>
 </div>
 
@@ -91,11 +94,11 @@
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        /*if (firstRender)
         {
             module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "/js/site.js");
         }
-        init();
+        init();*/
     }
 
     public async Task init()
@@ -121,5 +124,10 @@
 
         //await module.InvokeVoidAsync("saveMessage",name);
         await module.InvokeVoidAsync("setFocusOnElement", nameText);
+    }
+
+    public void Refresh()
+    {
+        StateHasChanged();
     }
 }
