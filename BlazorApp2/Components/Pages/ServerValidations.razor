@@ -1,0 +1,40 @@
+﻿
+@if(IsVisible)
+{
+    @if(Result)
+    {
+        <div id="divServerValidations" class="col-10 alert alert-info">
+            <div class="col-11" style="text-align:left">
+                <span>@ChildContent has been saved successfully</span>
+            </div>
+            <div class="col-11" style="text-align:right">
+                <a style="text-underline-position:auto;cursor:pointer" @onclick="(() => CloseValidation())">x</a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div id="divServerValidations" class="col-10 alert alert-danger">
+            <div class="col-11" style="text-align:left">
+                <span style="font-weight:bold; font-style:italic">Oops, something as gone wrong, please contact system admin</span>
+            </div>
+            <div class="col-11" style="text-align:right">
+                <a style="text-underline-position:auto;cursor:pointer" @onclick="(() => CloseValidation())">x</a>
+            </div>
+        </div>
+    }
+}
+
+@code {
+    [Parameter]
+    public bool IsVisible { get; set; }
+    [Parameter]
+    public RenderFragment ChildContent{ get; set; }
+    [Parameter]
+    public bool Result{ get; set; }
+
+    public async Task CloseValidation()
+    {
+        IsVisible = false;
+    }
+}

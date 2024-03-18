@@ -8,13 +8,12 @@
 
 <div class="col-12">
     <h3><b>Enter the author information</b></h3>
-
-    <div id="divServerValidations" class="col-10 alert alert-info">
-
-    </div>
+        <ServerValidations IsVisible="@IsVisible" Result="@Result">
+            @Name
+        </ServerValidations>
 
     <EditForm Model="@author" OnValidSubmit="@SaveAuthor">
-        @* <DataAnnotationsValidator/> *@
+        <DataAnnotationsValidator/>
         <label>Name:</label>
         <input @ref="nameText" @bind-value="author.Name" placeholder ="name"/>
         &nbsp;<ValidationMessage For="@(() => author.Name)"/>
@@ -81,6 +80,9 @@
     private IJSObjectReference? module;
     public ElementReference nameText;
     public string[] Cities { get; set; }
+    public bool IsVisible{ get; set; }
+    public string Name { get; set; }
+    public bool Result { get; set; }
 
     protected override void OnInitialized()
     {
@@ -111,10 +113,13 @@
     {
         AuthorService.SaveAuthor(author);
         var name = author.Name;
+        Result = true;
+        Name = author.Name;
+        IsVisible = true;
         author = new Author();
 
 
-        await module.InvokeVoidAsync("saveMessage",name);
+        //await module.InvokeVoidAsync("saveMessage",name);
         await module.InvokeVoidAsync("setFocusOnElement", nameText);
     }
 }

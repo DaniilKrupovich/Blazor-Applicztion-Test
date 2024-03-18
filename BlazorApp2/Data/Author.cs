@@ -7,6 +7,7 @@ namespace BlazorApp2.Data
         [Required(ErrorMessage ="Name is required ")]
         [StringLength(50,ErrorMessage ="name can not be longer then 20 chars")]
         public string Name { get; set; }
+        [Required]
         public string Description { get; set; }
         public int AuthorId { get; set; }
         [Required(ErrorMessage = "Name is required ")]
